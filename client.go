@@ -134,6 +134,7 @@ func main() {
 	Host := config.Transmission.Host
 	User := config.Transmission.User
 	Pass := config.Transmission.Pass
+
 	// Telegram Bot
 	bot, err := telebot.NewBot(Token)
 	if err != nil {
@@ -146,7 +147,6 @@ func main() {
 	messages := make(chan telebot.Message)
 	bot.Listen(messages, 1*time.Second)
 	for message := range messages {
-		//		fmt.Println(message.Text)
 		if TorrentUrl := RegExpUrl(message); TorrentUrl != "" {
 			t_name := DownloadTorrentUrl(TorrentUrl, client)
 			bot.SendMessage(message.Chat,
@@ -155,11 +155,6 @@ func main() {
 			t_name := DownloadMagnetLink(MagnetLink, client)
 			bot.SendMessage(message.Chat,
 				"Added: "+t_name, nil)
-		}
-
-		if message.Text == "/start" {
-			bot.SendMessage(message.Chat,
-				"no rexpt!", nil)
 		}
 
 		if message.Document.Exists() {
